@@ -12,12 +12,16 @@ let input = document.querySelector("#input");
 
 let result = document.querySelector(".result");
 
-let backspace = document.querySelector(".backspace")
+let backspace = document.querySelector(".backspace");
+
+let decimal = document.querySelector(".decimal")
 
 
 
 backspace.addEventListener('click', () => {
     input.value = input.value.slice(0, -1);
+
+    enableDecimal();  // Ensure the decimal button is enabled after backspace
 })
 clear.addEventListener('click', () => {
     input.value = '';
@@ -46,6 +50,8 @@ function division(num1, num2) {
 numbers.forEach((number) => {
     number.addEventListener('click', (e) => {
         input.value += e.target.value;        //Append the clicked number into input
+
+        enableDecimal();  // Ensure the decimal button is enabled if needed
     });
 });
 
@@ -54,7 +60,7 @@ operators.forEach((operator) => {
         if (input.value === "") {
             return;      // Prevent operator selection without input value
         }
-        number1 = parseInt(input.value); //parse the first number
+        number1 = parseFloat(input.value); //parse the first number
         op = e.target.value;   //store the operator
         input.value = " ";     //clear the input for the second value
     });
@@ -64,7 +70,7 @@ result.addEventListener('click', () => {
     if (input.value === "") {
         return; //prevent calculation if there's no second number entered
     }
-    number2 = parseInt(input.value); //parse the second number
+    number2 = parseFloat(input.value); //parse the second number
     finalResult = operate(number1, number2, op); //perform the calculation
 
     if (finalResult === "Error: Division by Zero" || finalResult === "Invalid Operator") {
@@ -114,6 +120,14 @@ document.addEventListener('keydown', (e) => {
         input.value = "";
     }
 });
+
+decimal.addEventListener('click', () => {
+    if (!input.value.includes(".")) {  // Check if the input already contains a decimal point
+        input.value += ".";  // Append decimal point
+        clearError();
+    }
+    disableDecimal();  // Disable the decimal button after it's used
+});
 function operate(number1, number2, operator) {
 
     switch (operator) {
@@ -133,3 +147,17 @@ function operate(number1, number2, operator) {
             return "Invalid Operator"      //Handle invalid operator
     }
 }
+
+
+// Disable the decimal button if there's already a decimal point in the input
+function disableDecimal() {
+    decimal.disabled = true;
+}
+
+// Enable the decimal button if there's no decimal point in the input
+function enableDecimal() {
+    if (!input.value.includes(".")) {
+        decimal.disabled = false;  // Enable the decimal button if no decimal is present
+    }
+}
+
