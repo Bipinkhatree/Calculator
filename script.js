@@ -75,6 +75,45 @@ result.addEventListener('click', () => {
 
 })
 
+
+// Handle keyboard input
+document.addEventListener('keydown', (e) => {
+    // Handle number keys (0-9)
+    if (e.key >= '0' && e.key <= '9') {
+        input.value += e.key;
+    }
+
+    // Handle operator keys (+, -, *, /)
+    if (e.key === '+' || e.key === '-' || e.key === '*' || e.key === '/') {
+        if (input.value === "") return; // Prevent operator selection without input value
+        number1 = parseInt(input.value);
+        op = e.key;
+        input.value = "";
+    }
+
+    // Handle equal key (=)
+    if (e.key === 'Enter') {
+        if (input.value === "") return;
+        number2 = parseInt(input.value);
+        let finalResult = operate(number1, number2, op);
+
+        if (finalResult === "Error: Division by Zero" || finalResult === "Invalid Operator") {
+            input.value = "";
+        } else {
+            input.value = finalResult;
+        }
+    }
+
+    // Handle backspace key (Backspace)
+    if (e.key === 'Backspace') {
+        input.value = input.value.slice(0, -1);
+    }
+
+    // Handle clear key (C)
+    if (e.key === 'c' || e.key === 'C') {
+        input.value = "";
+    }
+});
 function operate(number1, number2, operator) {
 
     switch (operator) {
